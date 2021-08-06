@@ -13,14 +13,13 @@ const db = mysql.createConnection(
 exports.register =(req,res)=>{
     console.log(req.body);//grabbing all data send fromm the form 
    
-    const name = req.body.name;
+   
     const email= req.body.email;
-    const image = req.body.image;
-    const info = req.body.info;
-
+    const password =req.body.password;
     //quering database
-    db.query('SELECT email FROM demande WHERE email= ?',[email],async(error,results)=>
+    db.query('SELECT email FROM admins WHERE email= ? AND password= ? ',[email,password],async(error,results)=>
     {
+        
         if(error)
         {
             console.log(error);
@@ -28,29 +27,16 @@ exports.register =(req,res)=>{
         }
         if(results.length>0)
         {
-            return res.render("register",{
-                message :'vous avez déja inscrit !'
+            return res.render("index",{
+                message :'welcome'
             })
-        }
-    
-   
-    db.query('INSERT INTO demande SET ?',{name:name,email:email,image:image,info:info},(error,results)=>{
-        if(error)
-        {
-            console.log(error);
-        
         }
         else
         {
             return res.render("register",{
-                message :'inscription réussite !'
-            })
-        
+                message :'Email ou mot de passe incorect'
+            })  
         }
-
-    })
-
-
     });
    
 }
